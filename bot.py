@@ -21,7 +21,7 @@ class PingHandler(BaseHTTPRequestHandler):
         self.wfile.write("Auto Message Scheduler Bot is running".encode("utf-8"))
 
 def run_http_server():
-    server = HTTPServer(("0.0.0.0", 10000), PingHandler)
+    server = HTTPServer(("0.0.0.0", 8080), PingHandler)
     server.serve_forever()
 
 threading.Thread(target=run_http_server, daemon=True).start()
