@@ -3,9 +3,9 @@ from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 PICS = [
-    "https://graph.org/file/1a6821fcdc7fd4aae1eeb.jpg",
-    "https://graph.org/file/6040b38cb51f5dcea0495.jpg",
-    "https://graph.org/file/2a5b38cb51f5dcea0495.jpg"
+    "https://graph.org/file/0b6a4bc9134932e9c348c-011d15ec8b216a2d00.jpg",
+    "https://graph.org/file/84013fb867846835a3588-37bd86de61757025a7.jpg",
+    "https://graph.org/file/9485b9d55052846909b1d-c960030f5ccc57a716.jpg"
 ]
 
 def register_start_handler(app):
@@ -15,7 +15,7 @@ def register_start_handler(app):
             random.choice(PICS),
             caption="🍿 Welcome!\nAuto Message Scheduler Bot",
             reply_markup=InlineKeyboardMarkup([
-                [InlineKeyboardButton("Community", url="https://t.me/yourcommunity")],
-                [InlineKeyboardButton("Group", url="https://t.me/yourgroup")]
+                [InlineKeyboardButton("Community", url="https://t.me/jb_links")],
+                [InlineKeyboardButton("Group", url="https://t.me/trixel_movies")]
             ])
         )
