@@ -1,35 +1,19 @@
 import asyncio
 import time
-from pymongo import MongoClient
-from config.config import MONGO_URI
+from database.mongodb import collection
 
-mongo = MongoClient(MONGO_URI)
-db = mongo["auto_message_bot"]
-collection = db["schedules"]
-
-async def schedule_loop(bot):
+async def schedule_loop(app):
     print("⏰ Scheduler started")
 
     while True:
-        now = int(time.time())
-
-        for item in collection.find({
-            "sent": False,
-            "time": {"$lte": now}
-        }):
+        for item in collection.find({"status": "running"}):
             try:
-                await bot.send_message(
+                await app.send_message(
                     chat_id=item["chat_id"],
-                    text=item["text"],
-                    reply_markup=item.get("buttons")
+                    text=item["text"]
                 )
 
-                collection.update_one(
-                    {"_id": item["_id"]},
-                    {"$set": {"sent": True}}
-                )
-
-                print(f"✅ Message sent: {item['_id']}")
+                await asyncio.sleep(item["interval"])
 
             except Exception as e:
                 print("❌ Scheduler error:", e)
