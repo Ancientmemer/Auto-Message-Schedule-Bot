@@ -15,27 +15,21 @@ This bot helps you schedule messages automatically and send them at the perfect 
 
 ✨ Features:
 📨 Schedule messages for future time  
-🔁 Auto daily / weekly messages  
+🔁 Auto repeat messages  
 ⏰ Save time with smart scheduling  
 ⚡ Simple, fast & reliable  
 
-🚀 Get Started:
-👉 /help – View all commands  
-
-💡 Manage your time smartly!
-Happy Scheduling 😄✨
+🚀 Use /add in a group to schedule messages!
 """
 
 def register_start_handler(app):
     @app.on_message(filters.command("start") & filters.private)
     async def start(_, message):
         await message.reply_photo(
-            photo=random.choice(PICS),
+            random.choice(PICS),
             caption=START_TEXT,
-            reply_markup=InlineKeyboardMarkup(
-                [
-                    [InlineKeyboardButton("🌐 Community", url="https://t.me/jb_links")],
-                    [InlineKeyboardButton("👥 Group", url="https://t.me/trixel_movies")]
-                ]
-            )
+            reply_markup=InlineKeyboardMarkup([
+                [InlineKeyboardButton("🌐 Community", url="https://t.me/jb_links")],
+                [InlineKeyboardButton("👥 Group", url="https://t.me/trixel_movies")]
+            ])
         )
