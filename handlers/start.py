@@ -23,7 +23,8 @@ This bot helps you schedule messages automatically and send them at the perfect 
 """
 
 def register_start_handler(app):
-    @app.on_message(filters.command("start") & filters.private)
+
+    @app.on_message(filters.command("start"))
     async def start(_, message):
         await message.reply_photo(
             random.choice(PICS),
