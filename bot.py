@@ -1,5 +1,6 @@
 import os
 import threading
+import asyncio
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pyrogram import Client, idle
 
@@ -11,6 +12,7 @@ from handlers.stop import register_stop_handlers
 from handlers.status import register_status_handlers
 from handlers.broadcast import register_broadcast_handlers
 from utils.scheduler import schedule_loop
+
 
 # ========== UptimeRobot Server ==========
 class PingHandler(BaseHTTPRequestHandler):
@@ -27,13 +29,14 @@ class PingHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def log_message(self, format, *args):
-        return
+        return  # silence logs
 
 
 def run_http_server():
     port = int(os.environ.get("PORT", "8080"))
     server = HTTPServer(("0.0.0.0", port), PingHandler)
     server.serve_forever()
+
 
 threading.Thread(target=run_http_server, daemon=True).start()
 
@@ -46,6 +49,7 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
+# Register handlers
 register_start_handler(app)
 register_add_handlers(app)
 register_stop_handlers(app)
@@ -55,9 +59,14 @@ register_broadcast_handlers(app)
 
 async def main():
     await app.start()
-    print("🤖 Bot started")
+    print("🤖 Bot started and listening")
 
+    # run scheduler in background (NON-BLOCKING)
     asyncio.create_task(schedule_loop(app))
 
     await idle()
     await app.stop()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
