@@ -56,3 +56,8 @@ register_broadcast_handlers(app)
 async def main():
     await app.start()
     print("🤖 Bot started")
+
+    asyncio.create_task(schedule_loop(app))
+
+    await idle()
+    await app.stop()
