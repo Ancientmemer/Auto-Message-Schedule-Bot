@@ -25,7 +25,10 @@ class PingHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
-        # HEAD il body vendaa (wfile.write illa)
+
+    def log_message(self, format, *args):
+        return
+
 
 def run_http_server():
     port = int(os.environ.get("PORT", "8080"))
@@ -33,6 +36,7 @@ def run_http_server():
     server.serve_forever()
 
 threading.Thread(target=run_http_server, daemon=True).start()
+
 
 # ========== Telegram Bot ==========
 app = Client(
@@ -48,13 +52,16 @@ register_stop_handlers(app)
 register_status_handlers(app)
 register_broadcast_handlers(app)
 
+
 async def main():
     await app.start()
     print("🤖 Bot started")
-    # Start scheduler
-    await schedule_loop(app)
+
+    asyncio.create_task(schedule_loop(app))  # FIXED
+
     await idle()
     await app.stop()
+
 
 import asyncio
 asyncio.run(main())
