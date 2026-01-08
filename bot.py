@@ -14,11 +14,18 @@ from utils.scheduler import schedule_loop
 
 # ========== UptimeRobot Server ==========
 class PingHandler(BaseHTTPRequestHandler):
+
     def do_GET(self):
         self.send_response(200)
         self.send_header("Content-type", "text/plain")
         self.end_headers()
         self.wfile.write(b"Bot is alive!")
+
+    def do_HEAD(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/plain")
+        self.end_headers()
+        # HEAD il body vendaa (wfile.write illa)
 
 def run_http_server():
     port = int(os.environ.get("PORT", "8080"))
