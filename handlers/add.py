@@ -1,4 +1,3 @@
-import time
 from pyrogram import filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from utils.admin_check import is_admin
@@ -12,15 +11,22 @@ TIMES = {
 
 def register_add_handlers(app):
 
-    @app.on_message(filters.command("add") & filters.group)
-    async def add(_, message):
-        if not await is_admin(_, message):
+    # STEP 1: /add command (groups + supergroups)
+    @app.on_message(filters.command("add") & filters.chat_type.groups)
+    async def add(client, message):
+
+        if not await is_admin(client, message):
             return
+
         if not message.reply_to_message:
             return await message.reply("❗ Reply to a message first")
 
+        # store original message id in callback_data
         buttons = [
-            [InlineKeyboardButton(k, callback_data=f"set_{v}")]
+            [InlineKeyboardButton(
+                k,
+                callback_data=f"set_{v}_{message.reply_to_message.id}"
+            )]
             for k, v in TIMES.items()
         ]
 
@@ -29,13 +35,21 @@ def register_add_handlers(app):
             reply_markup=InlineKeyboardMarkup(buttons)
         )
 
+    # STEP 2: callback handler
     @app.on_callback_query(filters.regex("^set_"))
-    async def set_time(_, cq):
-        interval = int(cq.data.split("_")[1])
-        original = cq.message.reply_to_message
+    async def set_time(client, cq):
+
+        _, interval, msg_id = cq.data.split("_")
+        interval = int(interval)
+        msg_id = int(msg_id)
+
+        chat_id = cq.message.chat.id
+
+        # fetch original message safely
+        original = await client.get_messages(chat_id, msg_id)
 
         add_message({
-            "chat_id": original.chat.id,
+            "chat_id": chat_id,
             "text": original.text or original.caption,
             "interval": interval,
             "status": "running"
