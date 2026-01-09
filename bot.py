@@ -1,15 +1,6 @@
 import asyncio
-from pyrogram import Client, idle
-
+from pyrogram import Client, idle, filters
 from config.config import BOT_TOKEN, API_ID, API_HASH
-
-from handlers.start import register_start_handler
-from handlers.add import register_add_handlers
-from handlers.stop import register_stop_handlers
-from handlers.status import register_status_handlers
-from handlers.broadcast import register_broadcast_handlers
-from utils.scheduler import schedule_loop
-
 
 app = Client(
     "AutoMessageBot",
@@ -18,23 +9,15 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
+@app.on_message(filters.text)
+async def echo(client, message):
+    print("MESSAGE RECEIVED")
+    await message.reply("👀 I am alive")
 
 async def main():
     await app.start()
     print("🤖 Bot started")
-
-    # ✅ REGISTER HANDLERS AFTER START
-    register_start_handler(app)
-    register_add_handlers(app)
-    register_stop_handlers(app)
-    register_status_handlers(app)
-    register_broadcast_handlers(app)
-
-    asyncio.create_task(schedule_loop(app))
-
     await idle()
-    await app.stop()
-
 
 if __name__ == "__main__":
     asyncio.run(main())
