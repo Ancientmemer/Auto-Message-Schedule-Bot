@@ -11,7 +11,7 @@ TIMES = {
 
 def register_add_handlers(app):
 
-    @app.on_message(filters.command("add") & (filters.group | filters.supergroup))
+    @app.on_message(filters.command("add") & filters.group)
     async def add(client, message):
 
         if not await is_admin(client, message):
