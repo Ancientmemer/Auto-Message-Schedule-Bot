@@ -4,7 +4,7 @@ from utils.admin_check import is_admin
 
 def register_status_handlers(app):
 
-    @app.on_message(filters.command("status") & (filters.group | filters.supergroup))
+    @app.on_message(filters.command("status") & (filters.group))
     async def status(client, message):
 
         if not await is_admin(client, message):
