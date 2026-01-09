@@ -4,7 +4,7 @@ from utils.admin_check import is_admin
 
 def register_stop_handlers(app):
 
-    @app.on_message(filters.command("stop") & (filters.group | filters.supergroup))
+    @app.on_message(filters.command("stop") & (filters.group))
     async def stop(client, message):
 
         if not await is_admin(client, message):
