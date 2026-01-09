@@ -1,7 +1,4 @@
-import os
-import threading
 import asyncio
-from http.server import BaseHTTPRequestHandler, HTTPServer
 from pyrogram import Client, idle
 
 from config.config import BOT_TOKEN, API_ID, API_HASH
@@ -13,7 +10,7 @@ from handlers.status import register_status_handlers
 from handlers.broadcast import register_broadcast_handlers
 from utils.scheduler import schedule_loop
 
-# ========== Telegram Bot ==========
+
 app = Client(
     "AutoMessageBot",
     api_id=API_ID,
@@ -21,19 +18,18 @@ app = Client(
     bot_token=BOT_TOKEN
 )
 
-# Register handlers
-register_start_handler(app)
-register_add_handlers(app)
-register_stop_handlers(app)
-register_status_handlers(app)
-register_broadcast_handlers(app)
-
 
 async def main():
     await app.start()
-    print("🤖 Bot started and listening")
+    print("🤖 Bot started")
 
-    # run scheduler in background (NON-BLOCKING)
+    # ✅ REGISTER HANDLERS AFTER START
+    register_start_handler(app)
+    register_add_handlers(app)
+    register_stop_handlers(app)
+    register_status_handlers(app)
+    register_broadcast_handlers(app)
+
     asyncio.create_task(schedule_loop(app))
 
     await idle()
