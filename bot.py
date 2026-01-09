@@ -13,34 +13,6 @@ from handlers.status import register_status_handlers
 from handlers.broadcast import register_broadcast_handlers
 from utils.scheduler import schedule_loop
 
-
-# ========== UptimeRobot Server ==========
-class PingHandler(BaseHTTPRequestHandler):
-
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
-        self.wfile.write(b"Bot is alive!")
-
-    def do_HEAD(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/plain")
-        self.end_headers()
-
-    def log_message(self, format, *args):
-        return  # silence logs
-
-
-def run_http_server():
-    port = int(os.environ.get("PORT", "8080"))
-    server = HTTPServer(("0.0.0.0", port), PingHandler)
-    server.serve_forever()
-
-
-threading.Thread(target=run_http_server, daemon=True).start()
-
-
 # ========== Telegram Bot ==========
 app = Client(
     "AutoMessageBot",
