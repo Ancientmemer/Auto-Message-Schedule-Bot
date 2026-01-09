@@ -1,6 +1,6 @@
 import asyncio
 from pyrogram import Client, idle, filters
-from .config import BOT_TOKEN, API_ID, API_HASH
+from config import BOT_TOKEN, API_ID, API_HASH
 
 app = Client(
     "AutoMessageBot",
